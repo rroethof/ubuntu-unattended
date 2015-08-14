@@ -28,7 +28,7 @@ spinner()
 
 # set defaults
 default_hostname="$(hostname)"
-default_domain="local"
+default_domain="intra.fd.nl"
 tmp=$(pwd)
 
 clear
@@ -50,7 +50,6 @@ if ! grep -q "noninteractive" /proc/cmdline ; then
 	# ask questions
 	read -ep " please enter your preferred hostname: " -i "$default_hostname" hostname
 	read -ep " please enter your preferred domain: " -i "$default_domain" domain
-	read -ep " please enter your username: " -i "haraldvdlaan" username
 fi
 
 # print status message
@@ -72,31 +71,20 @@ echo
 echo
 (apt-get -y dist-upgrade > /dev/null 2>&1) & spinner $! "dist-upgrade ubuntu os ..."
 echo
-(apt-get -y install openssh-server zsh git curl vim npm > /dev/null 2>&1) & spinner $! "installing extra software ..."
+(apt-get -y install openssh-server git curl vim > /dev/null 2>&1) & spinner $! "installing extra software ..."
 echo
 (apt-get -y autoremove > /dev/null 2>&1) & spinner $! "removing old kernels and packages ..."
 echo
 (apt-get -y purge > /dev/null 2>&1) & spinner $! "purging removed packages ..."
 echo
 
-## fix for installing keybase nodejs uses /usr/bin/nodejs but keybase will use /usr/bin/node
-ln -s /usr/bin/nodejs /usr/bin/node
-
-(npm install -g keybase-installer &> /dev/null) & spinner $! "downloading keybase ..."
-echo
-(keybase-installer &> /dev/null) & spinner $! "installing keybase ..."
-echo
-
-
-# changing bash to zsh
-wget -O /home/$username/.zaliasses 'https://raw.githubusercontent.com/hvanderlaan/zsh/master/.zaliasses' > /dev/null 2>&1
-wget -O /home/$username/.zfunctions 'https://raw.githubusercontent.com/hvanderlaan/zsh/master/.zfunctions' > /dev/null 2>&1
-wget -O /home/$username/.zcolors 'https://raw.githubusercontent.com/hvanderlaan/zsh/master/.zcolors' > /dev/null 2>&1
-wget -O /home/$username/.zcompdump 'https://raw.githubusercontent.com/hvanderlaan/zsh/master/.zcompdump' > /dev/null 2>&1
-wget -O /home/$username/.zprompt 'https://raw.githubusercontent.com/hvanderlaan/zsh/master/.zprompt' > /dev/null 2>&1
-wget -O /home/$username/.zshrc 'https://raw.githubusercontent.com/hvanderlaan/zsh/master/.zshrc' > /dev/null 2>&1
-usermod -s /usr/bin/zsh $username
-chown $username:$username .z*
+# adding the keys from sumanage01
+mkdir /root/.ssh
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAABAQCqMg5JJRmb1Mi0UqvPb8XArw5GHppnNQmiN1yxsgMLjESwydR/Xqdmci1MBja/QBcgNlkmpKtW5eOrPQraT7AWG8faM+DWVBRJJpOMes6HLU3WfvdwagYNZc/fMzrfWlPrgv49vSPoji0rXJc+xJ94kOBHxATQ7yQiBohML1jQbU+vdJLaldSBzfylI4POymafwKR/0xjM5c2Dd38nFN9ErtiJw6+e9NlRspK7L3IOa1xcMZZmyK47IxcTOhVMpOJV1T8LFu8HTmT0lbXqthc2wDjPgwn56Dj63Z4UsnZ4w+YVkIw7B/MWDshWjESm4xt/8vv7qmF/MFDuQGNtGPEJ ansible@sumanage01" >> /root/.ssh/authorized_keys
+echo "ssh-rsa AAAAB3NzaC1yc2EAAAABIwAAAQEAoL5VyQXE6RtwsoR/h/kiRtynWucLSw6uJGRLp5K8CMv5ZskHxiz1Qgprl/0i0HGBanPLGC46MJbZ23VtA5JeQ5Nor+ukS5uK1MD6r4pLahVNX5G1bajNmp/gKBxZhFtFSZgEQZ5gAed9GvRbpFBwYUqnK0MbBkOs66ACGUkyt/30iZ3yZz/b7UytFfMibCw3xKMuZCFGO/rJ5wb0tBaa1C5ehx946/4VqwNlSAjXV3h52qbI8SDjDK/hkd5k8M0ifge2Iuged2+nWgmHLyRIKMrZeWE4Tyiar7Vuab/ls1PE6WF2phki877Wj4g9T7CYsx0pxNvgc/GctsQ2kA6Wxw== root@sumanage01" >> /root/.ssh/authorized_keys
+chmod 700 /root/.ssh
+chmod 600 /root/.ssh/authorized_keys
+chown -R root:root /root/.ssh
 
 # remove myself to prevent any unintended changes at a later stage
 rm $0
