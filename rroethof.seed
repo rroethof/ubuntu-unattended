@@ -65,24 +65,20 @@ d-i partman-md/confirm_nooverwrite                          boolean     true
 d-i partman-auto/method                                     string      lvm
 d-i partman-auto-lvm/new_vg_name                            string      system
 d-i partman-auto/expert_recipe                              string      \
-      boot-swap-var-root ::                                   \
+      boot-swap-root ::                                       \
               1024 1024 1024 ext4                             \
                       $primary{ } $bootable{ }                \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \
                       mountpoint{ /boot }                     \
               .                                               \
-              1024 1024 1024 swap                             \
+              100% 1024 1024 100%                             \
+                      lv_name{ swap }                         \
                       $lvmok{ }                               \
                       method{ swap } format{ }                \
               .                                               \
-              4096 4096 40960 ext4                            \
-                      $lvmok{ }                               \
-                      method{ format } format{ }              \
-                      use_filesystem{ } filesystem{ ext4 }    \
-                      mountpoint{ /var }                      \
-              .                                               \
               4096 4096 1000000000 ext4                       \
+                      lv_name{ root }                         \
                       $lvmok{ }                               \
                       method{ format } format{ }              \
                       use_filesystem{ } filesystem{ ext4 }    \

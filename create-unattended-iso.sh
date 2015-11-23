@@ -66,8 +66,8 @@ fi
 while true; do
     echo " which ubuntu edition would you like to remaster:"
     echo
-    echo "  [1] Ubuntu 14.04.3 LTS Server amd64 - Trusty Tahr"
-    echo "  [2] Ubuntu 14.04.3 LTS Server i386  - Trusty Tahr"
+    echo "  [1] Ubuntu 14.04.4 LTS Server amd64 - Trusty Tahr"
+    echo "  [2] Ubuntu 14.04.4 LTS Server i386  - Trusty Tahr"
     echo
     read -p " please enter your preference: [1|2]: " ubver
     case $ubver in
